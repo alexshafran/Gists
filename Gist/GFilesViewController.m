@@ -77,6 +77,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     GistItemDetail *itemDetail = [[GistItemDetail alloc] initWithExternalRepresentation:(_item.files)[_fileNames[indexPath.row]]];
+    itemDetail.description = _item.description;
+    itemDetail.isPublic = _item.isPublic;
+    itemDetail.htmlURL = _item.htmlURL;
+    itemDetail.uid = _item.uid;
     GDetailViewController *detailViewController = [[GDetailViewController alloc] initWithNibName:nil bundle:nil];
     detailViewController.itemDetail = itemDetail;
     [self.navigationController pushViewController:detailViewController animated:YES];

@@ -11,6 +11,7 @@
 
 @interface GMoreDetailsViewController () {
     
+    BOOL _contentChanged;
 }
 
 @end
@@ -21,12 +22,20 @@
 
     [super viewDidLoad];
     self.refreshControl = nil;
+    _editablePrivacy = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
     self.title = @"detail";
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    
+    if (_contentChanged && [self.delegate respondsToSelector:@selector(moreDetailsViewControllerDidEditItem:)]) {
+        [self.delegate moreDetailsViewControllerDidEditItem:_itemDetail];
+    }
 }
 
 #pragma mark - tableView
@@ -74,10 +83,16 @@
 
         } else if (indexPath.row == 1) {
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            cell.textLabel.text = @"Private";
-            UISwitch *sw = [[UISwitch alloc] init];
-            sw.on = ! _itemDetail.isPublic;
-            cell.accessoryView = sw;
+            if (_editablePrivacy) {
+                cell.textLabel.text = @"Private";
+                UISwitch *sw = [[UISwitch alloc] init];
+                [sw addTarget:self action:@selector(privateSwitchValueChanged:) forControlEvents:UIControlEventValueChanged];
+                sw.on = ! _itemDetail.isPublic;
+                cell.accessoryView = sw;
+            } else {
+                cell.textLabel.text = @"Privacy";
+                cell.detailTextLabel.text = _itemDetail.isPublic ? @"Public" : @"Private";
+            }
         }
         
         return cell;
@@ -118,7 +133,39 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    if (indexPath.row == 0 && indexPath.section == 0) {
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Enter a new Filename:"
+                                                            message:nil
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Cancel"
+                                                  otherButtonTitles:@"Okay", nil];
+
+        alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [alertView show];
+    }
+}
+
+#pragma mark - changing data
+
+- (void)privateSwitchValueChanged:(id)sender {
+    
+    if (_itemDetail == nil) {
+        _itemDetail = [GistItemDetail new];
+    }
+    _itemDetail.isPublic = !((UISwitch*)sender).on;
+}
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
+
+    if (buttonIndex == 1) {
+        _contentChanged = YES;
+        NSString *filename = [[alertView textFieldAtIndex:0] text];
+        _itemDetail.filename = filename;
+        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
 }
 
 @end

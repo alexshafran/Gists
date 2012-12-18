@@ -15,4 +15,4 @@
     #import <MobileCoreServices/MobileCoreServices.h>
 #endif
 
-#define kAccessToken @"accessTokenKey"
+#define kAccessToken @"access_token"

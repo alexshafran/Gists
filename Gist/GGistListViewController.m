@@ -112,8 +112,12 @@
     
     GistItem *item = _items[indexPath.row];
     cell.textLabel.textColor = item.isPublic ? [UIColor blackColor] : [UIColor colorWithRed:.2 green:0 blue:0 alpha:1];
-    GistItemDetail *itemDetail= [[GistItemDetail alloc] initWithExternalRepresentation:((NSDictionary*)item.files)[([(NSDictionary*)item.files allKeys])[0]]];
-    cell.textLabel.text = itemDetail.filename;
+    
+    GistItemDetail *itemDetail;
+    if ([[item.files allKeys] count] > 0) {
+        itemDetail= [[GistItemDetail alloc] initWithExternalRepresentation:((NSDictionary*)item.files)[([(NSDictionary*)item.files allKeys])[0]]];
+    }
+    cell.textLabel.text = [itemDetail.filename length] > 0 ? itemDetail.filename : @"";
     
     NSDateFormatter *formatter = [GistItem dateFormatter];
     formatter.dateStyle = NSDateFormatterMediumStyle;
@@ -132,9 +136,13 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     GistItem *item = _items[indexPath.row];
+    if ([[item.files allKeys] count] < 1) return;
+    
     GistItemDetail *itemDetail = [[GistItemDetail alloc] initWithExternalRepresentation:(item.files)[([item.files allKeys])[0]]];
     itemDetail.description = item.description;
     itemDetail.isPublic = item.isPublic;
+    itemDetail.htmlURL = item.htmlURL;
+    itemDetail.uid = item.uid;
     
     if ([[item.files allKeys] count] == 1) {
         GDetailViewController *detailViewController = [[GDetailViewController alloc] initWithNibName:nil bundle:nil];

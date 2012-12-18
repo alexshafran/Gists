@@ -7,7 +7,7 @@
 //
 
 #import "GDetailViewController.h"
-#import "GMoreDetailsViewController.h"
+#import "GHTTPClient.h"
 #import <AFHTTPRequestOperation.h>
 #import <UIView+Helpers.h>
 
@@ -142,7 +142,8 @@
 - (void)viewDetails {
     
     GMoreDetailsViewController *detailViewController = [[GMoreDetailsViewController alloc] initWithStyle:UITableViewStyleGrouped];
-    detailViewController.itemDetail = self.itemDetail;
+    detailViewController.itemDetail = [_itemDetail copy];
+    detailViewController.delegate = self;
     [self.navigationController pushViewController:detailViewController animated:YES];
     
 }
@@ -171,6 +172,47 @@
 #pragma mark - saving
 
 - (void)save {
+    
+}
+
+#pragma mark - more info delegate
+
+- (void)moreDetailsViewControllerDidEditItem:(GistItemDetail*)item {
+    
+    NSDictionary *content =
+                            @{
+                                @"description" : [item.description length] > 0 ? item.description : @"",
+                                @"files" : @{
+                                    _itemDetail.filename : @{
+                                        @"filename" : item.filename,
+                                        @"content" : [_textView text]
+                                    }
+                                }
+    
+                            };
+    
+    _itemDetail = item;
+    [self setTitle:item.filename];
+    
+    [[GHTTPClient sharedClient] editGist:item.uid
+                                 content:content
+                              completion:^(NSError *error, id result) {
+                                  if (!error) {
+                                      [self uploadSucceeded:result];
+                                  } else {
+                                      [self uploadFailed:error];
+                                  }
+                                  
+                              }];
+}
+
+- (void)uploadSucceeded:(id)result {
+    
+    NSLog(@"result: %@", result);
+}
+
+- (void)uploadFailed:(NSError*)error {
+    
     
 }
 

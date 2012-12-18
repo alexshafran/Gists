@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "GBaseViewController.h"
 #import "GistItemDetail.h"
+#import "GMoreDetailsViewController.h"
 
-@interface GDetailViewController : GBaseViewController <UIActionSheetDelegate>
+@interface GDetailViewController : GBaseViewController <UIActionSheetDelegate, GMoreDetailViewControllerDelegate>
 
 @property (nonatomic, strong) GistItemDetail *itemDetail;
 @property (nonatomic, strong) NSString *plaintext;

@@ -9,10 +9,17 @@
 #import "GBaseTableViewController.h"
 #import "GistItemDetail.h"
 
+@protocol GMoreDetailViewControllerDelegate <NSObject>
 
+@optional
+- (void)moreDetailsViewControllerDidEditItem:(GistItemDetail*)item;
 
-@interface GMoreDetailsViewController : GBaseTableViewController
+@end
 
+@interface GMoreDetailsViewController : GBaseTableViewController <UIAlertViewDelegate>
+
+@property (nonatomic) BOOL editablePrivacy;
 @property (nonatomic, strong) GistItemDetail *itemDetail;
+@property (nonatomic, weak) id <GMoreDetailViewControllerDelegate> delegate;
 
 @end

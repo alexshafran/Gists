@@ -11,7 +11,7 @@
 
 @interface GistItem : MTLModel
 
-@property (nonatomic, copy) NSNumber *uid;
+@property (nonatomic, copy) NSString *uid;
 @property (nonatomic, copy) NSNumber *numComments;
 @property (nonatomic, assign) BOOL isPublic;
 @property (nonatomic, copy) NSURL *commentsURL;

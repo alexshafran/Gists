@@ -14,7 +14,7 @@
 @property (nonatomic, copy) NSString *description;
 @property (nonatomic, assign) BOOL isPublic;
 @property (nonatomic, copy) NSURL *rawUrl;
-@property (nonatomic, copy) NSNumber *uid;
+@property (nonatomic, copy) NSString *uid;
 @property (nonatomic, copy) NSURL *htmlURL;
 
 @end

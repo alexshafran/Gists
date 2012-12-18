@@ -20,5 +20,6 @@ typedef void (^GHTTPClientCompletionBlock)(NSError *error, id result);
 
 // requests
 - (void)getAllGists:(GHTTPClientCompletionBlock)completion;
+- (void)editGist:(NSString*)uid content:(NSDictionary*)content completion:(GHTTPClientCompletionBlock)completion;
 
 @end

@@ -32,11 +32,15 @@ typedef void (^GHTTPClientFailureBlock)(AFHTTPRequestOperation *operation, NSErr
     return _sharedHTTPClient;
 }
 
+- (NSString*)accessToken {
+    
+    return [[NSUserDefaults standardUserDefaults] valueForKey:kAccessToken];
+}
 - (NSDictionary*)defaultParameters {
     
-    NSString *token = [[NSUserDefaults standardUserDefaults] valueForKey:kAccessToken];
+    NSString *token = [self accessToken];
     if ([token length] > 0) {
-        return @{@"access_token" : token};
+        return @{kAccessToken : token};
     } else return nil;
 }
 
@@ -51,6 +55,14 @@ typedef void (^GHTTPClientFailureBlock)(AFHTTPRequestOperation *operation, NSErr
           success:[self handleSuccess:completion]
           failure:[self handleFailure:completion]];
     
+}
+
+- (void)editGist:(NSString*)uid content:(NSDictionary*)content completion:(GHTTPClientCompletionBlock)completion {
+ 
+    [self patchPath:[NSString stringWithFormat:@"%@/%@?%@=%@", kPathForAllGists, uid, kAccessToken, [self accessToken]]
+         parameters:content
+            success:[self handleSuccess:completion]
+            failure:[self handleFailure:completion]];
 }
 
 - (GHTTPClientSuccessBlock)handleSuccess:(GHTTPClientCompletionBlock)completion {
