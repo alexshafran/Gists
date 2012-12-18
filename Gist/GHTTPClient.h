@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <AFNetworking/AFHTTPClient.h>
+#import "GHTTPUrlDefinitions.h"
 
 typedef void (^GHTTPClientCompletionBlock)(NSError *error, id result);
 
 @interface GHTTPClient : AFHTTPClient
-
-@property (nonatomic, strong) NSString *accessToken;
 
 + (id)newClient;
 + (id)sharedClient;

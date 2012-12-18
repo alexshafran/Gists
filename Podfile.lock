@@ -1,27 +1,23 @@
 
+SPEC CHECKSUMS: 
+  libextobjc/EXTScope: 7dcd66faf065d3b7fcb5f85a1646efaed28bcadf
+  libextobjc/EXTKeyPathCoding: 7dcd66faf065d3b7fcb5f85a1646efaed28bcadf
+  UIView-Helpers: d6bd0c4cb4421a6d693cad84addb30594281dadd
+  Mantle: 190df0e0b65c0ebc13f2ed39e99248e630ad2616
+  AFNetworking: 4c11f857c9a18d65f4257c90a1e74ac49f0ac422
+
+COCOAPODS: 0.15.2
+
+DEPENDENCIES: 
+- AFNetworking
+- Mantle
+- UIView-Helpers
+
 PODS: 
 - AFNetworking (1.0.1)
-- AFOAuth2Client (0.0.1): 
-  - AFNetworking (~> 1.0)
 - Mantle (0.2.2): 
   - libextobjc/EXTKeyPathCoding
   - libextobjc/EXTScope
 - UIView-Helpers (1.1.0)
 - libextobjc/EXTKeyPathCoding (0.2.3)
 - libextobjc/EXTScope (0.2.3)
-
-SPEC CHECKSUMS: 
-  libextobjc/EXTScope: 7dcd66faf065d3b7fcb5f85a1646efaed28bcadf
-  Mantle: 190df0e0b65c0ebc13f2ed39e99248e630ad2616
-  AFOAuth2Client: b95919a197d49697f6477dd554659a39334d34ba
-  UIView-Helpers: d6bd0c4cb4421a6d693cad84addb30594281dadd
-  AFNetworking: 4c11f857c9a18d65f4257c90a1e74ac49f0ac422
-  libextobjc/EXTKeyPathCoding: 7dcd66faf065d3b7fcb5f85a1646efaed28bcadf
-
-COCOAPODS: 0.15.2
-
-DEPENDENCIES: 
-- AFNetworking
-- AFOAuth2Client
-- Mantle
-- UIView-Helpers

@@ -18,7 +18,7 @@
 @property (nonatomic, copy) NSDate *createdDate;
 @property (nonatomic, copy) NSDate *updatedDate;
 @property (nonatomic, copy) NSString *description;
-@property (nonatomic, copy) NSString *files;
+@property (nonatomic, copy) NSDictionary *files;
 @property (nonatomic, copy) NSURL *url;
 @property (nonatomic, copy) NSURL *htmlURL;
 @property (nonatomic, copy) NSURL *avatarURL;

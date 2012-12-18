@@ -10,9 +10,10 @@
 #import "GBaseViewController.h"
 #import "GistItemDetail.h"
 
-@interface GDetailViewController : GBaseViewController
+@interface GDetailViewController : GBaseViewController <UIActionSheetDelegate>
 
 @property (nonatomic, strong) GistItemDetail *itemDetail;
 @property (nonatomic, strong) NSString *plaintext;
+@property (nonatomic, assign) BOOL isEditing;
 
 @end

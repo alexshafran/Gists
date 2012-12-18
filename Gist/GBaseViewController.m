@@ -26,6 +26,7 @@
 
 - (void)setTitle:(NSString *)title {
     
+    [super setTitle:title];
     // had to do this bc cheap fonts have jacked up alignments
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 44)];
     label.backgroundColor = [UIColor clearColor];

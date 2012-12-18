@@ -13,18 +13,17 @@
 
 @interface GLoginViewController () {
     
-    UIWebView *_webView;
+    UITextField *_userField;
+    UITextField *_passField;
 }
 
 @end
 
 @implementation GLoginViewController
 
-#define kLoginURLPath               @"https://github.com/login/oauth/authorize"
 #define kClientID                   @"7f22b2fda1b4525fa519"
 #define kClientSecret               @"e31d0900160e5b0979c9caeb9181fa7f55d93fbc"
-#define kRedirectURI                @"https://gist.shafran.com"
-#define kScopeList                  @"gist"
+#define kScope                      @"gist"
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,81 +37,121 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frameSizeWidth, self.view.frameSizeHeight)];
-    _webView.delegate = self;
-    [self.view addSubview:_webView];
+    
+    self.title = @"Login";
+    
+    self.view.backgroundColor = [UIColor colorWithRed:140.0f/255 green:206.0f/255 blue:236.0f/255 alpha:1];
+    
+    _userField = [self textfieldWithSize:CGSizeMake(290, 40)];
+    _userField.frameOrigin = CGPointMake(15, [[UIScreen mainScreen] bounds].size.height > 480 ? 90 : 30);
+    _userField.placeholder = @"username";
+    _userField.returnKeyType = UIReturnKeyNext;
+    [self.view addSubview:_userField];
+    
+    _passField = [self textfieldWithSize:_userField.frameSize];
+    _passField.frameOrigin = CGPointMake(_userField.frameOriginX, CGRectGetMaxY(_userField.frame) + 15);
+    _passField.placeholder = @"password";
+    _passField.secureTextEntry = YES;
+    _passField.returnKeyType = UIReturnKeyDone;
+    _passField.delegate = self;
+    [self.view addSubview:_passField];
+    
+    UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    loginButton.frame = CGRectMake(_userField.frameOriginX,
+                                   CGRectGetMaxY(_passField.frame) + 15,
+                                   _userField.frameSizeWidth,
+                                   50);
+    loginButton.frameOriginY = CGRectGetMaxY(_passField.frame) + 15;
+    loginButton.backgroundColor = [UIColor colorWithRed:245.0f/255 green:245.0f/255 blue:160.0f/255 alpha:1];
+    [loginButton setTitle:@"Git-R-Done" forState:UIControlStateNormal];
+    [loginButton.titleLabel setFont:[UIFont fontWithName:@"Collegiate" size:26]];
+    [loginButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [loginButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [loginButton addTarget:self action:@selector(loginButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:loginButton];
+    
+    
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+#pragma mark - textfield
+
+- (UITextField*)textfieldWithSize:(CGSize)size {
     
-    NSString *loginPath = [NSString stringWithFormat:@"%@?client_id=%@&redirect_uri=%@&scope=%@",
-                           kLoginURLPath,
-                           kClientID,
-                           kRedirectURI,
-                           kScopeList];
+    UITextField *textField = [[UITextField alloc] initWithSize:size];
+    textField.backgroundColor = [UIColor whiteColor];
+    textField.font = [UIFont fontWithName:@"Collegiate" size:26];
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:loginPath]];
-    [_webView loadRequest:request];
-    
-    self.title = @"Logging in...";
-    
+    return textField;
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+#pragma mark - button callbacks
+
+- (void)loginButtonPressed:(id)sender {
     
-    if ([request.URL.absoluteString rangeOfString:@"code="].location != NSNotFound) {
-        
-        NSString *code = [request.URL.absoluteString substringFromIndex:[request.URL.absoluteString rangeOfString:@"="].location + 1];
-        
-        NSDictionary *params = @{
-                                @"client_id" : kClientID,
-                                @"redirect_uri" : kRedirectURI,
-                                @"client_secret" : kClientSecret,
-                                @"code" : code
-                                };
-        
-        [[GHTTPClient sharedClient] postPath:@"https://github.com/login/oauth/access_token"
-                                  parameters:params
-                                     success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                         [self tokenReceived:responseObject];
-                                     }
-                                     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                         [self requestFailed:error];
-                                         
-         }];
-        
-        return NO;
+    [self login];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    
+    if (textField == _passField) {
+        [self login];
     }
     
     return YES;
 }
 
+#pragma mark - login
+
+- (void)login {
+    
+    if (![[_userField text] length] || ![[_passField text] length])
+         return;
+    
+    NSDictionary *params = @{
+                            @"scopes" : @[kScope],
+                            @"client_id" : kClientID,
+                            @"client_secret" : kClientSecret
+                            };
+    
+    [[GHTTPClient sharedClient] setParameterEncoding:AFJSONParameterEncoding];
+    [[GHTTPClient sharedClient] setAuthorizationHeaderWithUsername:[_userField text] password:[_passField text]];
+    [[GHTTPClient sharedClient] postPath:kPathForAuthorizations
+                              parameters:params
+                                 success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                     NSError *error;
+                                     id json = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
+                                     if (!error) {
+                                         [self tokenReceived:json];
+                                     } else {
+                                         [self loadFailed:error];
+                                     }
+                                 }
+                                 failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                     [self loadFailed:error];
+                                 }];
+    
+}
+
+
 - (void)tokenReceived:(id)result {
     
-    NSString *tokenString = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
-    int startLocation = [tokenString rangeOfString:@"="].location + 1;
-    int endLocation = [tokenString rangeOfString:@"&token_type"].location;
-    tokenString = [tokenString substringWithRange:NSMakeRange(startLocation, endLocation - startLocation)];
-    NSLog(@"token: %@", tokenString);
+    NSString *token = [result valueForKey:@"token"];
+    NSLog(@"logged in with token: %@", token);
     
-    [[GHTTPClient sharedClient] setAccessToken:tokenString];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:token forKey:kAccessToken];
+    [defaults synchronize];
+    
     
     GGistListViewController *listViewController = [[GGistListViewController alloc] init];
     [self.navigationController pushViewController:listViewController animated:YES];
 
-    
 }
 
-- (void)requestFailed:(NSError*)error {
+- (void)loadFailed:(NSError*)error {
     
     
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

@@ -24,8 +24,19 @@
     return self;
 }
 
+- (void)viewDidLoad {
+    
+    [super viewDidLoad];
+    
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl = refreshControl;
+    refreshControl.tintColor = [[UINavigationBar appearance] tintColor];
+    [refreshControl addTarget:self action:@selector(refreshControlPulled:) forControlEvents:UIControlEventValueChanged];
+}
+
 - (void)setTitle:(NSString *)title {
     
+    [super setTitle:title];
     // had to do this bc cheap fonts have jacked up alignments
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 44)];
     label.backgroundColor = [UIColor clearColor];
@@ -34,13 +45,8 @@
     label.text = [title lowercaseString];
     label.textAlignment = NSTextAlignmentCenter;
     [label addTextShadow];
+    [label sizeToFit];
     self.navigationItem.titleView = label;
-    
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-    self.refreshControl = refreshControl;
-    refreshControl.tintColor = [[UINavigationBar appearance] tintColor];
-    [refreshControl addTarget:self action:@selector(refreshControlPulled:) forControlEvents:UIControlEventValueChanged];
-
 }
 
 - (void)refreshControlPulled:(id)sender {

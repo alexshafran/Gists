@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <GBaseViewController.h>
 
-@interface GLoginViewController : UIViewController <UIWebViewDelegate>
+@interface GLoginViewController : GBaseViewController <UITextFieldDelegate>
 
 @end
