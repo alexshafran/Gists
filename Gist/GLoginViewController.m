@@ -7,24 +7,23 @@
 //
 
 #import "GLoginViewController.h"
+#import "GLoginView.h"
 #import <UIView+Helpers.h>
 #import "GHTTPClient.h"
 #import "GGistListViewController.h"
 
 @interface GLoginViewController () {
     
-    UIWebView *_webView;
+    GLoginView *_loginView;
 }
 
 @end
 
 @implementation GLoginViewController
 
-#define kLoginURLPath               @"https://github.com/login/oauth/authorize"
 #define kClientID                   @"7f22b2fda1b4525fa519"
 #define kClientSecret               @"e31d0900160e5b0979c9caeb9181fa7f55d93fbc"
-#define kRedirectURI                @"https://gist.shafran.com"
-#define kScopeList                  @"gist"
+#define kScope                      @"gist"
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,81 +37,100 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = @"Login to github";
+    
+    self.view.backgroundColor = [UIColor colorWithRed:140.0f/255 green:206.0f/255 blue:236.0f/255 alpha:1];
+    
+    GLoginView *loginView = [[GLoginView alloc] initWithFrame:self.view.bounds];
 
-    _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.frameSizeWidth, self.view.frameSizeHeight)];
-    _webView.delegate = self;
-    [self.view addSubview:_webView];
+    [loginView.userField setDelegate:self];
+    [loginView.passwordField setDelegate:self];
+    
+    [loginView.loginButton addTarget:self
+                              action:@selector(loginButtonPressed:)
+                    forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:loginView];
+    _loginView = loginView;
+    
+    
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+#pragma mark - button callbacks
+
+- (void)loginButtonPressed:(id)sender {
     
-    NSString *loginPath = [NSString stringWithFormat:@"%@?client_id=%@&redirect_uri=%@&scope=%@",
-                           kLoginURLPath,
-                           kClientID,
-                           kRedirectURI,
-                           kScopeList];
-    
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:loginPath]];
-    [_webView loadRequest:request];
-    
-    self.title = @"Logging in...";
-    
+    [self login];
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
     
-    if ([request.URL.absoluteString rangeOfString:@"code="].location != NSNotFound) {
-        
-        NSString *code = [request.URL.absoluteString substringFromIndex:[request.URL.absoluteString rangeOfString:@"="].location + 1];
-        
-        NSDictionary *params = @{
-                                @"client_id" : kClientID,
-                                @"redirect_uri" : kRedirectURI,
-                                @"client_secret" : kClientSecret,
-                                @"code" : code
-                                };
-        
-        [[GHTTPClient sharedClient] postPath:@"https://github.com/login/oauth/access_token"
-                                  parameters:params
-                                     success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                         [self tokenReceived:responseObject];
-                                     }
-                                     failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                         [self requestFailed:error];
-                                         
-         }];
-        
-        return NO;
+    if (textField == _loginView.userField) {
+        [_loginView.passwordField becomeFirstResponder];
+    }
+    else if (textField == _loginView.passwordField) {
+        [self login];
     }
     
     return YES;
 }
 
+#pragma mark - login
+
+- (void)login {
+    
+    if (![[_loginView.userField text] length] || ![[_loginView.passwordField text] length])
+         return;
+    
+    NSDictionary *params = @{
+                            @"scopes" : @[kScope],
+                            @"client_id" : kClientID,
+                            @"client_secret" : kClientSecret
+                            };
+    
+    [[GHTTPClient sharedClient] setParameterEncoding:AFJSONParameterEncoding];
+    [[GHTTPClient sharedClient] setAuthorizationHeaderWithUsername:[_loginView.userField text]
+                                                          password:[_loginView.passwordField text]];
+    
+    [[GHTTPClient sharedClient] postPath:kPathForAuthorizations
+                              parameters:params
+                                 success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                     NSError *error;
+                                     id json = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                               options:0
+                                                                                 error:&error];
+                                     if (!error) {
+                                         [self tokenReceived:json];
+                                     } else {
+                                         [self loadFailed:error];
+                                     }
+                                 }
+                                 failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                     [self loadFailed:error];
+                                 }];
+    
+}
+
+
 - (void)tokenReceived:(id)result {
     
-    NSString *tokenString = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
-    int startLocation = [tokenString rangeOfString:@"="].location + 1;
-    int endLocation = [tokenString rangeOfString:@"&token_type"].location;
-    tokenString = [tokenString substringWithRange:NSMakeRange(startLocation, endLocation - startLocation)];
-    NSLog(@"token: %@", tokenString);
+    NSString *token = [result valueForKey:@"token"];
+    NSLog(@"logged in with token: %@", token);
     
-    [[GHTTPClient sharedClient] setAccessToken:tokenString];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setValue:token forKey:kAccessToken];
+    [defaults synchronize];
+    
     
     GGistListViewController *listViewController = [[GGistListViewController alloc] init];
     [self.navigationController pushViewController:listViewController animated:YES];
 
-    
 }
 
-- (void)requestFailed:(NSError*)error {
+- (void)loadFailed:(NSError*)error {
     
     
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

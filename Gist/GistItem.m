@@ -51,9 +51,9 @@
     return [NSValueTransformer valueTransformerForName:MTLURLValueTransformerName];
 }
 
-+ (NSValueTransformer *)itemDetailTransformer {
-    return [NSValueTransformer mtl_externalRepresentationTransformerWithModelClass:[GistItemDetail class]];
-}
+//+ (NSValueTransformer *)filesTransformer {
+//    return [NSValueTransformer mtl_externalRepresentationTransformerWithModelClass:[GistItemDetail class]];
+//}
 
 + (NSValueTransformer *)createdDateTransformer {
     return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(NSString *str) {

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E26B4DE20A6443C0B4CB06E5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E43591B1CA4BC3919B38CE /* libPods.a */; };
+		FA745D181680ED620060E6AB /* GMoreDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA745D171680ED620060E6AB /* GMoreDetailsViewController.m */; };
 		FA8506EB16714D11007130D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8506EA16714D11007130D6 /* UIKit.framework */; };
 		FA8506ED16714D11007130D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8506EC16714D11007130D6 /* Foundation.framework */; };
 		FA8506EF16714D11007130D6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8506EE16714D11007130D6 /* CoreGraphics.framework */; };
@@ -31,12 +32,16 @@
 		FA8507B0167281EB007130D6 /* UILabel+Shadow.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8507AF167281EB007130D6 /* UILabel+Shadow.m */; };
 		FA8507C216728750007130D6 /* GDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8507C116728750007130D6 /* GDetailViewController.m */; };
 		FA8507C516728766007130D6 /* GBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8507C416728766007130D6 /* GBaseViewController.m */; };
+		FA92F1B816E95FE900C21C23 /* GLoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA92F1B716E95FE900C21C23 /* GLoginView.m */; };
+		FA9DC2AD1680DCC100FC4F25 /* GFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9DC2AC1680DCC100FC4F25 /* GFilesViewController.m */; };
 		FAD0B1D2167FAC3B00D0BC4D /* GLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD0B1D1167FAC3B00D0BC4D /* GLoginViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		9352F2B01BAE4B24A9D10D78 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		93E43591B1CA4BC3919B38CE /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA745D161680ED620060E6AB /* GMoreDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMoreDetailsViewController.h; sourceTree = "<group>"; };
+		FA745D171680ED620060E6AB /* GMoreDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMoreDetailsViewController.m; sourceTree = "<group>"; };
 		FA8506E616714D11007130D6 /* Gist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA8506EA16714D11007130D6 /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FA8506EC16714D11007130D6 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -75,6 +80,10 @@
 		FA8507C116728750007130D6 /* GDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDetailViewController.m; sourceTree = "<group>"; };
 		FA8507C316728766007130D6 /* GBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBaseViewController.h; sourceTree = "<group>"; };
 		FA8507C416728766007130D6 /* GBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBaseViewController.m; sourceTree = "<group>"; };
+		FA92F1B616E95FE900C21C23 /* GLoginView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLoginView.h; sourceTree = "<group>"; };
+		FA92F1B716E95FE900C21C23 /* GLoginView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLoginView.m; sourceTree = "<group>"; };
+		FA9DC2AB1680DCC100FC4F25 /* GFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GFilesViewController.h; sourceTree = "<group>"; };
+		FA9DC2AC1680DCC100FC4F25 /* GFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GFilesViewController.m; sourceTree = "<group>"; };
 		FAD0B1D0167FAC3B00D0BC4D /* GLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLoginViewController.h; sourceTree = "<group>"; };
 		FAD0B1D1167FAC3B00D0BC4D /* GLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -139,6 +148,7 @@
 				FA850781167279B2007130D6 /* Base Views */,
 				FAD0B1CE167FAC1900D0BC4D /* Login View */,
 				FA8507271671C202007130D6 /* Root View */,
+				FA9DC2AA1680DC8500FC4F25 /* Files View */,
 				FA8507B116728511007130D6 /* Detail View */,
 				FA85078516727BF0007130D6 /* Helpers */,
 				FA8506F116714D11007130D6 /* Supporting Files */,
@@ -244,13 +254,26 @@
 			children = (
 				FA8507C016728750007130D6 /* GDetailViewController.h */,
 				FA8507C116728750007130D6 /* GDetailViewController.m */,
+				FA745D161680ED620060E6AB /* GMoreDetailsViewController.h */,
+				FA745D171680ED620060E6AB /* GMoreDetailsViewController.m */,
 			);
 			name = "Detail View";
+			sourceTree = "<group>";
+		};
+		FA9DC2AA1680DC8500FC4F25 /* Files View */ = {
+			isa = PBXGroup;
+			children = (
+				FA9DC2AB1680DCC100FC4F25 /* GFilesViewController.h */,
+				FA9DC2AC1680DCC100FC4F25 /* GFilesViewController.m */,
+			);
+			name = "Files View";
 			sourceTree = "<group>";
 		};
 		FAD0B1CE167FAC1900D0BC4D /* Login View */ = {
 			isa = PBXGroup;
 			children = (
+				FA92F1B616E95FE900C21C23 /* GLoginView.h */,
+				FA92F1B716E95FE900C21C23 /* GLoginView.m */,
 				FAD0B1D0167FAC3B00D0BC4D /* GLoginViewController.h */,
 				FAD0B1D1167FAC3B00D0BC4D /* GLoginViewController.m */,
 			);
@@ -355,6 +378,9 @@
 				FA8507C216728750007130D6 /* GDetailViewController.m in Sources */,
 				FA8507C516728766007130D6 /* GBaseViewController.m in Sources */,
 				FAD0B1D2167FAC3B00D0BC4D /* GLoginViewController.m in Sources */,
+				FA9DC2AD1680DCC100FC4F25 /* GFilesViewController.m in Sources */,
+				FA745D181680ED620060E6AB /* GMoreDetailsViewController.m in Sources */,
+				FA92F1B816E95FE900C21C23 /* GLoginView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

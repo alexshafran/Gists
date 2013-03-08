@@ -13,6 +13,7 @@
 #import "GListViewCell.h"
 #import "GDetailViewController.h"
 #import "GistItemDetail.h"
+#import "GFilesViewController.h"
 
 #define kTableViewRowHeight         80.0f
 
@@ -43,6 +44,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
+    [super viewWillAppear:animated];
     [self loadData];
     
     self.title = @"gists";
@@ -110,8 +112,12 @@
     
     GistItem *item = _items[indexPath.row];
     cell.textLabel.textColor = item.isPublic ? [UIColor blackColor] : [UIColor colorWithRed:.2 green:0 blue:0 alpha:1];
-    GistItemDetail *itemDetail= [[GistItemDetail alloc] initWithExternalRepresentation:((NSDictionary*)item.files)[([(NSDictionary*)item.files allKeys])[0]]];
-    cell.textLabel.text = itemDetail.filename;
+    
+    GistItemDetail *itemDetail;
+    if ([[item.files allKeys] count] > 0) {
+        itemDetail= [[GistItemDetail alloc] initWithExternalRepresentation:((NSDictionary*)item.files)[([(NSDictionary*)item.files allKeys])[0]]];
+    }
+    cell.textLabel.text = [itemDetail.filename length] > 0 ? itemDetail.filename : @"";
     
     NSDateFormatter *formatter = [GistItem dateFormatter];
     formatter.dateStyle = NSDateFormatterMediumStyle;
@@ -128,14 +134,27 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    GDetailViewController *detailViewController = [[GDetailViewController alloc] initWithNibName:nil bundle:nil];
     
     GistItem *item = _items[indexPath.row];
-    GistItemDetail *itemDetail = [[GistItemDetail alloc] initWithExternalRepresentation:((NSDictionary*)item.files)[([(NSDictionary*)item.files allKeys])[0]]];
+    if ([[item.files allKeys] count] < 1) return;
+    
+    GistItemDetail *itemDetail = [[GistItemDetail alloc] initWithExternalRepresentation:(item.files)[([item.files allKeys])[0]]];
     itemDetail.description = item.description;
     itemDetail.isPublic = item.isPublic;
-    detailViewController.itemDetail = itemDetail;
-    [self.navigationController pushViewController:detailViewController animated:YES];
+    itemDetail.htmlURL = item.htmlURL;
+    itemDetail.uid = item.uid;
+    
+    if ([[item.files allKeys] count] == 1) {
+        GDetailViewController *detailViewController = [[GDetailViewController alloc] initWithNibName:nil bundle:nil];
+        detailViewController.itemDetail = itemDetail;
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    } else {
+        GFilesViewController *filesViewController = [[GFilesViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        filesViewController.fileNames = [item.files allKeys];
+        filesViewController.item = item;
+        [self.navigationController pushViewController:filesViewController animated:YES];
+    }
+    
 }
 
 @end

@@ -7,8 +7,6 @@
 //
 
 #import "GHTTPClient.h"
-#import "GHTTPUrlDefinitions.h"
-#import <AFOAuth2Client.h>
 
 static GHTTPClient *_sharedHTTPClient = nil;
 
@@ -34,9 +32,16 @@ typedef void (^GHTTPClientFailureBlock)(AFHTTPRequestOperation *operation, NSErr
     return _sharedHTTPClient;
 }
 
+- (NSString*)accessToken {
+    
+    return [[NSUserDefaults standardUserDefaults] valueForKey:kAccessToken];
+}
 - (NSDictionary*)defaultParameters {
     
-    return @{@"access_token" : _accessToken};
+    NSString *token = [self accessToken];
+    if ([token length] > 0) {
+        return @{kAccessToken : token};
+    } else return nil;
 }
 
 #pragma mark - GET
@@ -49,6 +54,15 @@ typedef void (^GHTTPClientFailureBlock)(AFHTTPRequestOperation *operation, NSErr
        parameters:[self defaultParameters]
           success:[self handleSuccess:completion]
           failure:[self handleFailure:completion]];
+    
+}
+
+- (void)editGist:(NSString*)uid content:(NSDictionary*)content completion:(GHTTPClientCompletionBlock)completion {
+ 
+    [self patchPath:[NSString stringWithFormat:@"%@/%@?%@=%@", kPathForAllGists, uid, kAccessToken, [self accessToken]]
+         parameters:content
+            success:[self handleSuccess:completion]
+            failure:[self handleFailure:completion]];
 }
 
 - (GHTTPClientSuccessBlock)handleSuccess:(GHTTPClientCompletionBlock)completion {

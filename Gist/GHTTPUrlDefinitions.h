@@ -9,8 +9,9 @@
 #ifndef Gist_GHTTPUrlDefinitions_h
 #define Gist_GHTTPUrlDefinitions_h
 
-#define kGistBaseUrl        @"https://api.github.com"
-#define kPathForUsers       @"/users"
-#define kPathForAllGists    @"/gists"
+#define kGistBaseUrl            @"https://api.github.com"
+#define kPathForUsers           @"/users"
+#define kPathForAllGists        @"/gists"
+#define kPathForAuthorizations  @"/authorizations"
 
 #endif
