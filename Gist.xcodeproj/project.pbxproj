@@ -32,6 +32,7 @@
 		FA8507B0167281EB007130D6 /* UILabel+Shadow.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8507AF167281EB007130D6 /* UILabel+Shadow.m */; };
 		FA8507C216728750007130D6 /* GDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8507C116728750007130D6 /* GDetailViewController.m */; };
 		FA8507C516728766007130D6 /* GBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8507C416728766007130D6 /* GBaseViewController.m */; };
+		FA92F1B816E95FE900C21C23 /* GLoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA92F1B716E95FE900C21C23 /* GLoginView.m */; };
 		FA9DC2AD1680DCC100FC4F25 /* GFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9DC2AC1680DCC100FC4F25 /* GFilesViewController.m */; };
 		FAD0B1D2167FAC3B00D0BC4D /* GLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD0B1D1167FAC3B00D0BC4D /* GLoginViewController.m */; };
 /* End PBXBuildFile section */
@@ -79,6 +80,8 @@
 		FA8507C116728750007130D6 /* GDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDetailViewController.m; sourceTree = "<group>"; };
 		FA8507C316728766007130D6 /* GBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBaseViewController.h; sourceTree = "<group>"; };
 		FA8507C416728766007130D6 /* GBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBaseViewController.m; sourceTree = "<group>"; };
+		FA92F1B616E95FE900C21C23 /* GLoginView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLoginView.h; sourceTree = "<group>"; };
+		FA92F1B716E95FE900C21C23 /* GLoginView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLoginView.m; sourceTree = "<group>"; };
 		FA9DC2AB1680DCC100FC4F25 /* GFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GFilesViewController.h; sourceTree = "<group>"; };
 		FA9DC2AC1680DCC100FC4F25 /* GFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GFilesViewController.m; sourceTree = "<group>"; };
 		FAD0B1D0167FAC3B00D0BC4D /* GLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLoginViewController.h; sourceTree = "<group>"; };
@@ -269,6 +272,8 @@
 		FAD0B1CE167FAC1900D0BC4D /* Login View */ = {
 			isa = PBXGroup;
 			children = (
+				FA92F1B616E95FE900C21C23 /* GLoginView.h */,
+				FA92F1B716E95FE900C21C23 /* GLoginView.m */,
 				FAD0B1D0167FAC3B00D0BC4D /* GLoginViewController.h */,
 				FAD0B1D1167FAC3B00D0BC4D /* GLoginViewController.m */,
 			);
@@ -375,6 +380,7 @@
 				FAD0B1D2167FAC3B00D0BC4D /* GLoginViewController.m in Sources */,
 				FA9DC2AD1680DCC100FC4F25 /* GFilesViewController.m in Sources */,
 				FA745D181680ED620060E6AB /* GMoreDetailsViewController.m in Sources */,
+				FA92F1B816E95FE900C21C23 /* GLoginView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

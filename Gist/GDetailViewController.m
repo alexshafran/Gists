@@ -37,12 +37,15 @@
     
     [super viewDidLoad];
     
+    [self registerForKeyboardNotifications];
+    
     _textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, self.view.frameSizeWidth, self.view.frameSizeHeight)];
     _textView.font = [UIFont fontWithName:@"Courier" size:14];
     _textView.alwaysBounceHorizontal = NO;
     _textView.editable = NO;
     _textView.dataDetectorTypes = UIDataDetectorTypeLink;
     _textView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    _textView.contentInset = UIEdgeInsetsMake(10, 0, 10, 0);
     [self.view addSubview:_textView];
     
     _actionItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
@@ -214,6 +217,45 @@
 - (void)uploadFailed:(NSError*)error {
     
     
+}
+
+#pragma mark - Notification Center
+
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:self.view.window];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:self.view.window];
+}
+
+- (void)keyboardWillShow:(NSNotification*)notification
+{
+    NSDictionary *userInfo = [notification userInfo];
+    CGRect keyboardEndFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGFloat keyboardHeight = CGRectGetHeight(keyboardEndFrame);
+    NSTimeInterval animationDuration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    
+    [UIView animateWithDuration:animationDuration
+                     animations:^{
+                         _textView.frameSizeHeight = CGRectGetHeight(self.view.frame) - keyboardHeight;
+                     }];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification
+{
+    NSDictionary *userInfo = [notification userInfo];
+    NSTimeInterval animationDuration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    
+    [UIView animateWithDuration:animationDuration
+                     animations:^{
+                         _textView.frameSizeHeight = CGRectGetHeight(self.view.frame);
+                     }];
 }
 
 @end

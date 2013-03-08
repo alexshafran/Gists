@@ -7,14 +7,14 @@
 //
 
 #import "GLoginViewController.h"
+#import "GLoginView.h"
 #import <UIView+Helpers.h>
 #import "GHTTPClient.h"
 #import "GGistListViewController.h"
 
 @interface GLoginViewController () {
     
-    UITextField *_userField;
-    UITextField *_passField;
+    GLoginView *_loginView;
 }
 
 @end
@@ -38,51 +38,23 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Login";
+    self.title = @"Login to github";
     
     self.view.backgroundColor = [UIColor colorWithRed:140.0f/255 green:206.0f/255 blue:236.0f/255 alpha:1];
     
-    _userField = [self textfieldWithSize:CGSizeMake(290, 40)];
-    _userField.frameOrigin = CGPointMake(15, [[UIScreen mainScreen] bounds].size.height > 480 ? 90 : 30);
-    _userField.placeholder = @"username";
-    _userField.returnKeyType = UIReturnKeyNext;
-    [self.view addSubview:_userField];
-    
-    _passField = [self textfieldWithSize:_userField.frameSize];
-    _passField.frameOrigin = CGPointMake(_userField.frameOriginX, CGRectGetMaxY(_userField.frame) + 15);
-    _passField.placeholder = @"password";
-    _passField.secureTextEntry = YES;
-    _passField.returnKeyType = UIReturnKeyDone;
-    _passField.delegate = self;
-    [self.view addSubview:_passField];
-    
-    UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    loginButton.frame = CGRectMake(_userField.frameOriginX,
-                                   CGRectGetMaxY(_passField.frame) + 15,
-                                   _userField.frameSizeWidth,
-                                   50);
-    loginButton.frameOriginY = CGRectGetMaxY(_passField.frame) + 15;
-    loginButton.backgroundColor = [UIColor colorWithRed:245.0f/255 green:245.0f/255 blue:160.0f/255 alpha:1];
-    [loginButton setTitle:@"Git-R-Done" forState:UIControlStateNormal];
-    [loginButton.titleLabel setFont:[UIFont fontWithName:@"Collegiate" size:26]];
-    [loginButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [loginButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-    [loginButton addTarget:self action:@selector(loginButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:loginButton];
-    
-    
-}
+    GLoginView *loginView = [[GLoginView alloc] initWithFrame:self.view.bounds];
 
-#pragma mark - textfield
-
-- (UITextField*)textfieldWithSize:(CGSize)size {
+    [loginView.userField setDelegate:self];
+    [loginView.passwordField setDelegate:self];
     
-    UITextField *textField = [[UITextField alloc] initWithSize:size];
-    textField.backgroundColor = [UIColor whiteColor];
-    textField.font = [UIFont fontWithName:@"Collegiate" size:26];
-    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    [loginView.loginButton addTarget:self
+                              action:@selector(loginButtonPressed:)
+                    forControlEvents:UIControlEventTouchUpInside];
     
-    return textField;
+    [self.view addSubview:loginView];
+    _loginView = loginView;
+    
+    
 }
 
 #pragma mark - button callbacks
@@ -94,7 +66,10 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     
-    if (textField == _passField) {
+    if (textField == _loginView.userField) {
+        [_loginView.passwordField becomeFirstResponder];
+    }
+    else if (textField == _loginView.passwordField) {
         [self login];
     }
     
@@ -105,7 +80,7 @@
 
 - (void)login {
     
-    if (![[_userField text] length] || ![[_passField text] length])
+    if (![[_loginView.userField text] length] || ![[_loginView.passwordField text] length])
          return;
     
     NSDictionary *params = @{
@@ -115,12 +90,16 @@
                             };
     
     [[GHTTPClient sharedClient] setParameterEncoding:AFJSONParameterEncoding];
-    [[GHTTPClient sharedClient] setAuthorizationHeaderWithUsername:[_userField text] password:[_passField text]];
+    [[GHTTPClient sharedClient] setAuthorizationHeaderWithUsername:[_loginView.userField text]
+                                                          password:[_loginView.passwordField text]];
+    
     [[GHTTPClient sharedClient] postPath:kPathForAuthorizations
                               parameters:params
                                  success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                      NSError *error;
-                                     id json = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
+                                     id json = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                               options:0
+                                                                                 error:&error];
                                      if (!error) {
                                          [self tokenReceived:json];
                                      } else {
